@@ -27,14 +27,17 @@ const C = {
 const T = {
   logoIntro: { from: 0, dur: 90 },
   emailConn: { from: 90, dur: 210 },
-  dashboard: { from: 300, dur: 210 },
-  facturas: { from: 510, dur: 210 },
-  citas: { from: 720, dur: 210 },
-  owiChat: { from: 930, dur: 210 },
-  reportes: { from: 1140, dur: 210 },
-  sendEmail: { from: 1350, dur: 210 },
-  comisiones: { from: 1560, dur: 180 },
-  outro: { from: 1740, dur: 120 },
+  dashboard: { from: 300, dur: 180 },
+  facturas: { from: 480, dur: 180 },
+  citas: { from: 660, dur: 180 },
+  owiChat: { from: 840, dur: 180 },
+  summaries: { from: 1020, dur: 180 },
+  categorizacion: { from: 1200, dur: 180 },
+  alertas: { from: 1380, dur: 180 },
+  reportes: { from: 1560, dur: 180 },
+  sendEmail: { from: 1740, dur: 180 },
+  comisiones: { from: 1920, dur: 180 },
+  outro: { from: 2100, dur: 120 },
 };
 
 const CLAMP = {
@@ -648,7 +651,7 @@ const SceneFacturas = () => {
           Facturas
         </h2>
         <p style={{ color: C.gray, fontSize: 28, margin: "12px 0 0" }}>
-          Detectadas y procesadas automaticamente
+          Detectadas y procesadas automáticamente
         </p>
       </div>
       <div style={{ width: "100%", maxWidth: 700 }}>
@@ -668,7 +671,7 @@ const SceneFacturas = () => {
         }}
       >
         <span style={{ color: C.green, fontSize: 28, fontWeight: 800 }}>
-          Deteccion de duplicados automatica
+          Detección de duplicados automática
         </span>
       </div>
     </div>
@@ -681,9 +684,9 @@ const SceneCitas = () => {
   const { fps } = useVideoConfig();
   const citas = [
     {
-      tipo: "Odontologia",
+      tipo: "Odontología",
       medico: "Dr. Garcia",
-      fecha: "Manana 10:00 AM",
+      fecha: "Mañana 10:00 AM",
       urgente: true,
     },
     {
@@ -723,10 +726,10 @@ const SceneCitas = () => {
         <h2
           style={{ fontSize: 72, fontWeight: 900, color: C.white, margin: 0 }}
         >
-          Citas medicas
+          Citas médicas
         </h2>
         <p style={{ color: C.gray, fontSize: 28, margin: "12px 0 0" }}>
-          Detectadas desde tu correo, automaticamente
+          Detectadas desde tu correo, automáticamente
         </p>
       </div>
       <div style={{ width: "100%", maxWidth: 700 }}>
@@ -1165,6 +1168,377 @@ const ReportesPhone = ({
   );
 };
 
+// Scene: AI Email Summaries
+const SceneSummaries = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const emails = [
+    {
+      from: "Cliente ABC",
+      subject: "Confirmacion de pedido #1234",
+      preview: "Gracias por su compra...",
+      time: "2 min",
+    },
+    {
+      from: "Proveedor XYZ",
+      subject: "Factura pendiente de pago",
+      preview: "Le recordamos que tiene...",
+      time: "15 min",
+    },
+    {
+      from: "Equipo Marketing",
+      subject: "Reunion programada",
+      preview: "Tenemos una reunion mañana...",
+      time: "1 hora",
+    },
+  ];
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(135deg, #1a1a2e 0%, ${C.bg} 100%)`,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "50px 30px",
+      }}
+    >
+      <div
+        style={{
+          opacity: fadeIn(frame),
+          transform: `translateY(${slideUp(frame)})`,
+          textAlign: "center",
+          marginBottom: 30,
+        }}
+      >
+        <h2
+          style={{ fontSize: 64, fontWeight: 900, color: C.white, margin: 0 }}
+        >
+          Resumenes con IA
+        </h2>
+        <p style={{ color: C.gray, fontSize: 28, margin: "12px 0 0" }}>
+          owi lee tus correos y te da el resumen
+        </p>
+      </div>
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 700,
+          backgroundColor: "#0d1117",
+          borderRadius: 24,
+          padding: 8,
+          opacity: fadeIn(frame, 20, 50),
+        }}
+      >
+        {emails.map((email, i) => {
+          const emailSp = spring({
+            frame: Math.max(0, frame - i * 20 - 30),
+            fps,
+            config: { damping: 30 },
+          });
+          return (
+            <div
+              key={i}
+              style={{
+                backgroundColor: "#161b22",
+                borderRadius: 16,
+                padding: "20px 24px",
+                marginBottom: 8,
+                opacity: emailSp,
+                transform: `translateX(${interpolate(emailSp, [0, 1], [-60, 0])}px)`,
+                borderLeft: `4px solid ${i === 0 ? "#4ade80" : i === 1 ? "#fbbf24" : "#60a5fa"}`,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 8,
+                }}
+              >
+                <span style={{ color: C.white, fontWeight: 700, fontSize: 22 }}>
+                  {email.from}
+                </span>
+                <span style={{ color: C.gray, fontSize: 16 }}>
+                  {email.time}
+                </span>
+              </div>
+              <div style={{ color: C.white, fontSize: 20, marginBottom: 6 }}>
+                {email.subject}
+              </div>
+              <div style={{ color: C.gray, fontSize: 18 }}>{email.preview}</div>
+              {i === 0 && (
+                <div
+                  style={{
+                    marginTop: 12,
+                    padding: "10px 16px",
+                    backgroundColor: "#22c55e20",
+                    borderRadius: 10,
+                    display: "inline-block",
+                  }}
+                >
+                  <span
+                    style={{ color: "#4ade80", fontSize: 16, fontWeight: 600 }}
+                  >
+                    Resumen: Pedido confirmado, enviando en 24h
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Scene: Email Categorization
+const SceneCategorizacion = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const categories = [
+    { name: "Facturas", icon: "📄", count: 12, color: "#4ade80" },
+    { name: "Clientes", icon: "👥", count: 8, color: "#60a5fa" },
+    { name: "Promociones", icon: "🔥", count: 24, color: "#f472b6" },
+    { name: "Importantes", icon: "⭐", count: 3, color: "#fbbf24" },
+  ];
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        backgroundColor: C.bg,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "50px 30px",
+      }}
+    >
+      <div
+        style={{
+          opacity: fadeIn(frame),
+          transform: `translateY(${slideUp(frame)})`,
+          textAlign: "center",
+          marginBottom: 40,
+        }}
+      >
+        <h2
+          style={{ fontSize: 64, fontWeight: 900, color: C.white, margin: 0 }}
+        >
+          Correos organizados
+        </h2>
+        <p style={{ color: C.gray, fontSize: 28, margin: "12px 0 0" }}>
+          Inteligencia que clasifica tu inbox
+        </p>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: 20,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          maxWidth: 900,
+        }}
+      >
+        {categories.map((cat, i) => {
+          const catSp = spring({
+            frame: Math.max(0, frame - i * 25 - 20),
+            fps,
+            config: { damping: 30, stiffness: 100 },
+          });
+          return (
+            <div
+              key={i}
+              style={{
+                width: 280,
+                backgroundColor: "#0d1117",
+                borderRadius: 24,
+                padding: "28px 24px",
+                textAlign: "center",
+                opacity: catSp,
+                transform: `translateY(${interpolate(catSp, [0, 1], [60, 0])}px)`,
+                border: `2px solid ${cat.color}33`,
+                boxShadow: `0 0 40px ${cat.color}15`,
+              }}
+            >
+              <div style={{ fontSize: 52, marginBottom: 16 }}>{cat.icon}</div>
+              <div
+                style={{
+                  color: cat.color,
+                  fontSize: 28,
+                  fontWeight: 800,
+                  marginBottom: 8,
+                }}
+              >
+                {cat.name}
+              </div>
+              <div style={{ color: C.gray, fontSize: 20 }}>
+                {cat.count} correos
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Scene: Alertas y Notificaciones
+const SceneAlertas = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const alertas = [
+    {
+      title: "Nueva factura recibida",
+      desc: "Empresa XYZ te envio $2,450",
+      tipo: "factura",
+      urgente: true,
+    },
+    {
+      title: "Cita medica manana",
+      desc: "Dr. Perez - 10:00 AM",
+      tipo: "cita",
+      urgente: true,
+    },
+    {
+      title: "Pago pendiente",
+      desc: "Factura #5678 vence en 2 dias",
+      tipo: "pago",
+      urgente: false,
+    },
+  ];
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(180deg, #1c1c2e 0%, ${C.bg} 100%)`,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "50px 30px",
+      }}
+    >
+      <div
+        style={{
+          opacity: fadeIn(frame),
+          transform: `translateY(${slideUp(frame)})`,
+          textAlign: "center",
+          marginBottom: 40,
+        }}
+      >
+        <h2
+          style={{ fontSize: 64, fontWeight: 900, color: C.white, margin: 0 }}
+        >
+          Alertas inteligentes
+        </h2>
+        <p style={{ color: C.gray, fontSize: 28, margin: "12px 0 0" }}>
+          Lo importante, sin que se te pase
+        </p>
+      </div>
+
+      <div style={{ width: "100%", maxWidth: 720 }}>
+        {alertas.map((alert, i) => {
+          const alertSp = spring({
+            frame: Math.max(0, frame - i * 25 - 30),
+            fps,
+            config: { damping: 30 },
+          });
+          return (
+            <div
+              key={i}
+              style={{
+                backgroundColor: "#0d1117",
+                borderRadius: 20,
+                padding: "24px 28px",
+                marginBottom: 16,
+                opacity: alertSp,
+                transform: `translateX(${interpolate(alertSp, [0, 1], [-80, 0])}px)`,
+                borderLeft: `5px solid ${alert.urgente ? "#ef4444" : "#fbbf24"}`,
+                display: "flex",
+                alignItems: "center",
+                gap: 20,
+              }}
+            >
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 16,
+                  backgroundColor: alert.urgente ? "#ef444420" : "#fbbf2420",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 28,
+                }}
+              >
+                {alert.tipo === "factura"
+                  ? "📄"
+                  : alert.tipo === "cita"
+                    ? "🩺"
+                    : "💰"}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    color: C.white,
+                    fontSize: 24,
+                    fontWeight: 700,
+                    marginBottom: 4,
+                  }}
+                >
+                  {alert.title}
+                </div>
+                <div style={{ color: C.gray, fontSize: 18 }}>{alert.desc}</div>
+              </div>
+              {alert.urgente && (
+                <div
+                  style={{
+                    padding: "8px 16px",
+                    backgroundColor: "#ef4444",
+                    borderRadius: 20,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#fff",
+                  }}
+                >
+                  URGENTE
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        style={{
+          marginTop: 30,
+          padding: "16px 32px",
+          backgroundColor: "#22c55e20",
+          borderRadius: 16,
+          border: "2px solid #22c55e33",
+        }}
+      >
+        <span style={{ color: "#4ade80", fontSize: 22, fontWeight: 600 }}>
+          Notificaciones en tiempo real
+        </span>
+      </div>
+    </div>
+  );
+};
+
 // Scene 7: Reportes
 const SceneReportes = () => {
   const frame = useCurrentFrame();
@@ -1404,7 +1778,7 @@ const SceneComisiones = () => {
           Comisiones
         </h2>
         <p style={{ color: C.gray, fontSize: 26, margin: "10px 0 0" }}>
-          Calculadas automaticamente de tus facturas
+          Calculadas automáticamente de tus facturas
         </p>
       </div>
       <div
@@ -1560,9 +1934,9 @@ const SceneOutro = () => {
   const sp = spring({ frame, fps, config: { damping: 30, stiffness: 100 } });
   const features = [
     "Dashboard en tiempo real",
-    "Facturas automaticas",
+    "Facturas automáticas",
     "owi, tu asistente IA",
-    "Reportes PDF instantaneos",
+    "Reportes PDF instantáneos",
     "Citas y recordatorios",
   ];
   return (
@@ -1641,34 +2015,115 @@ const SceneOutro = () => {
           );
         })}
       </div>
+      {/* CTA: Solicita tu usuario de prueba */}
       <div
         style={{
-          marginTop: 48,
-          opacity: fadeIn(frame, 120, 160),
-          transform: `translateY(${slideUp(frame, 120, 160)})`,
+          marginTop: 36,
+          opacity: fadeIn(frame, 100, 140),
+          transform: `translateY(${slideUp(frame, 100, 140)})`,
           textAlign: "center",
+          width: "100%",
+          maxWidth: 680,
         }}
       >
         <div
           style={{
-            fontSize: 44,
-            fontWeight: 900,
-            color: C.primary,
-            letterSpacing: 3,
+            backgroundColor: C.primary,
+            borderRadius: 24,
+            padding: "28px 40px",
+            boxShadow: `0 0 60px ${C.primary}55`,
           }}
         >
-          owbitz.com
+          <div
+            style={{
+              fontSize: 36,
+              fontWeight: 900,
+              color: C.white,
+              letterSpacing: 1,
+              marginBottom: 4,
+            }}
+          >
+            Solicita tu usuario de prueba
+          </div>
+        </div>
+      </div>
+
+      {/* URLs */}
+      <div
+        style={{
+          marginTop: 28,
+          opacity: fadeIn(frame, 130, 170),
+          transform: `translateY(${slideUp(frame, 130, 170)})`,
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+          width: "100%",
+          maxWidth: 620,
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "#0d1117",
+            borderRadius: 18,
+            padding: "18px 32px",
+            border: `2px solid ${C.primary}44`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+          }}
+        >
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              backgroundColor: C.primary,
+            }}
+          />
+          <span
+            style={{
+              fontSize: 30,
+              fontWeight: 800,
+              color: C.primary,
+              letterSpacing: 1,
+            }}
+          >
+            owbitz.com
+          </span>
         </div>
         <div
           style={{
-            width: 100,
-            height: 4,
-            backgroundColor: C.primary,
-            margin: "14px auto 0",
-            borderRadius: 99,
-            boxShadow: `0 0 20px ${C.primary}`,
+            backgroundColor: "#0d1117",
+            borderRadius: 18,
+            padding: "18px 32px",
+            border: `2px solid ${C.primary}44`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
           }}
-        />
+        >
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              backgroundColor: C.primary,
+            }}
+          />
+          <span
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              color: C.primaryLight,
+              letterSpacing: 0.5,
+            }}
+          >
+            owmail.owbitz.com
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -1703,6 +2158,18 @@ export const MyComposition = () => {
       </Sequence>
       <Sequence from={T.owiChat.from} durationInFrames={T.owiChat.dur}>
         <SceneOwiChat />
+      </Sequence>
+      <Sequence from={T.summaries.from} durationInFrames={T.summaries.dur}>
+        <SceneSummaries />
+      </Sequence>
+      <Sequence
+        from={T.categorizacion.from}
+        durationInFrames={T.categorizacion.dur}
+      >
+        <SceneCategorizacion />
+      </Sequence>
+      <Sequence from={T.alertas.from} durationInFrames={T.alertas.dur}>
+        <SceneAlertas />
       </Sequence>
       <Sequence from={T.reportes.from} durationInFrames={T.reportes.dur}>
         <SceneReportes />
